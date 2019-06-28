@@ -1,0 +1,21 @@
+html, body, * {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+  "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  user-select: none;
+}
+
+::-webkit-scrollbar {
+  width: 0.5em;
+  height: 0.55em;
+  background-color: #faf9f7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #afafaf;
+  border-radius: 0.2em;
+}
+
+.selection {
+  background: rgba(170, 204, 238, 0.3);
+  border: 1px solid #0078d7;
+}
