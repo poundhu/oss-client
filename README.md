@@ -1,28 +1,16 @@
-# oss-client
+# OSS 云存储
 
-> An electron-vue project
+> oss client
 
-#### Build Setup
+#### 主页
 
-``` bash
-# install dependencies
-npm install
+![Image text](./image/主页.png)
 
-# serve with hot reload at localhost:9080
-npm run dev
+#### 传输列表
 
-# build electron application for production
-npm run build
-
-# run unit & end-to-end tests
-npm test
+![Image text](./image/传输列表.png)
 
 
-# lint all JS/Vue component files in `src/`
-npm run lint
+#### 设置
 
-```
-
----
-
-This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[8fae476](https://github.com/SimulatedGREG/electron-vue/tree/8fae4763e9d225d3691b627e83b9e09b56f6c935) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
+![Image text](./image/设置.png)
