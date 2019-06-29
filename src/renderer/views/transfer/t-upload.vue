@@ -1,14 +1,13 @@
 <template>
-    <div class="t-done">
-        <div class="done-header">
-            <div>共传输<span class="blue">{{1}}</span>个文件</div>
-            <el-button>清除所有记录</el-button>
+    <div class="t-upload">
+        <div class="upload-header">
+            <div>共上传<span class="blue">{{uploads.length}}</span>个文件</div>
         </div>
-        <virtual-list class="done-list" v-if="items.length > 0" :size="40" :remain="8">
-            <item v-for="(item, index) of items" :key="index"></item>
+        <virtual-list class="upload-list" v-if="uploads.length > 0" :size="40" :remain="8">
+            <item v-for="(item, index) of uploads" :key="index" :item="item"></item>
         </virtual-list>
         <div v-else class="none-list">
-            <i class="el-icon-time"></i>
+            <i class="el-icon-upload2"></i>
             <span>当前没有传输记录~</span>
         </div>
     </div>
@@ -17,25 +16,22 @@
 <script>
   import VirtualList from 'vue-virtual-scroll-list'
   import Item from './item'
+  import transferMixin from '@/mixins/transfer'
 
   export default {
-    name: 't-done',
+    name: 't-upload',
     components: { VirtualList, Item },
-    data () {
-      return {
-        items: []
-      }
-    }
+    mixins: [transferMixin]
   }
 </script>
 
 <style scoped lang="scss">
-    .t-done {
+    .t-upload {
         height: 100%;
         display: flex;
         flex-direction: column;
 
-        .done-header {
+        .upload-header {
             height: 35px;
             display: flex;
             flex-direction: row;
@@ -50,7 +46,7 @@
             }
         }
 
-        .done-list {
+        .upload-list {
             flex: 1;
         }
 

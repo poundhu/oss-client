@@ -1,10 +1,7 @@
 <template>
     <div class="t-download">
         <div class="download-header">
-            <div class="header-progress">
-                <span>下载总进度</span>
-            </div>
-            <div>123</div>
+            <div>共下载<span class="blue">{{downloads.length}}</span>个文件</div>
         </div>
         <virtual-list class="download-list" v-if="downloads.length > 0" :size="40" :remain="8">
             <item v-for="(item, index) of downloads" :key="index" :item="item">
@@ -66,14 +63,13 @@
             display: flex;
             flex-direction: row;
             align-items: center;
+            justify-content: space-between;
             border-bottom: 1px #ebeef5 solid;
             padding: 0 20px;
-            justify-content: space-between;
+            font-size: 15px;
 
-            .header-progress {
-                width: 200px;
-                display: flex;
-                flex-direction: row;
+            .blue {
+                color: #06a8ff;
             }
         }
 

@@ -1,7 +1,7 @@
 <template>
     <div class="list-item">
         <div class="item-file-meta">
-            <icon class="item-file-icon"></icon>
+            <icon class="item-file-icon" :postfix="item.key"></icon>
             <div class="item-file-detail">
                 <div class="file-name">{{item.key}}</div>
                 <div class="file-size">{{item.fsize | sizeFormatter}}</div>
@@ -12,9 +12,8 @@
             <slot></slot>
         </div>
         <div class="item-file-button">
-            <el-button type="text">打</el-button>
-            <el-button type="text">打</el-button>
-            <el-button type="text">清</el-button>
+            <el-button type="text" icon="el-icon-folder"></el-button>
+            <el-button type="text" icon="el-icon-delete"></el-button>
         </div>
     </div>
 </template>
@@ -54,6 +53,7 @@
         .item-file-meta {
             display: flex;
             flex-direction: row;
+            width: 250px;
 
             .item-file-icon {
                 height: 30px;
@@ -68,7 +68,11 @@
 
                 .file-name {
                     font-size: 13px;
+                    line-height: 1.3;
                     color: #606266;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
 
                 .file-size {
@@ -86,6 +90,10 @@
         .item-file-status {
             font-size: 13px;
             color: #909399;
+        }
+
+        .item-file-button {
+            cursor: default;
         }
     }
 </style>

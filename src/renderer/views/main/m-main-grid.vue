@@ -56,9 +56,6 @@
         for (const el of removed) {
           this.removeSelectedItem(el.dataset.hash)
         }
-      },
-      onStop () {
-        this.selection.keepSelection()
       }
     },
     mounted () {
@@ -68,8 +65,7 @@
         boundaries: ['.m-main-grid'],
         onSelect: this.onSelect,
         onStart: this.onStart,
-        onMove: this.onMove,
-        onStop: this.onStop
+        onMove: this.onMove
       })
       this.clearAllSelected()
     }

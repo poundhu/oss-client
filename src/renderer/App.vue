@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <layout></layout>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -9,7 +9,11 @@
 
   export default {
     name: 'oss-client',
-    components: { Layout }
+    components: { Layout },
+    mounted () {
+      document.addEventListener('dragover', (event) => event.preventDefault(), false)
+      document.addEventListener('drop', (event) => event.preventDefault(), false)
+    }
   }
 </script>
 

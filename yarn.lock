@@ -9083,6 +9083,11 @@ q@^1.1.2, q@~1.5.0:
   resolved "https://registry.npm.taobao.org/q/download/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
+qiniu-js@^2.5.4:
+  version "2.5.4"
+  resolved "https://registry.npm.taobao.org/qiniu-js/download/qiniu-js-2.5.4.tgz#9d708bbdb9b5c326a42b59900eacd6d4497c81e4"
+  integrity sha1-nXCLvbm1wyakK1mQDqzW1El8geQ=
+
 qiniu@^7.2.2:
   version "7.2.2"
   resolved "https://registry.npm.taobao.org/qiniu/download/qiniu-7.2.2.tgz#94425193f6b1dbd093fd78583070a64dde6cc5e7"

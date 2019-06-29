@@ -21,7 +21,7 @@ export default {
     },
     async initBucket (bucket) {
       await this.setBucketLoading(true)
-      let { items } = await this.oss.bucketFiles(bucket)
+      const { items } = await this.oss.bucketFiles(bucket)
       await this.setBucketFiles({ name: bucket, files: items })
       await this.setCurBucket(bucket)
       await this.setBucketLoading(false)
@@ -75,7 +75,6 @@ export default {
       }
     },
     dblClick (item) {
-      console.log(123)
       if (item.isFolder) {
         const localPath = pathJoin([this.curPath, item.key])
         this.changeDirectory(localPath)
@@ -104,18 +103,20 @@ export default {
         }, { type: 'separator' }, {
           label: '下载',
           click: () => {
-            const uuid = uuidV1()
-            const transferFile = { uuid, ...file }
-            this.pushDownload(transferFile)
-            const fileUrl = url.format({
-              protocol: 'http:',
-              host: this.oss.domain[0],
-              pathname: encodeURI(file.key)
-            }).toString()
-            ipcRenderer.send('download', {
-              url: fileUrl,
-              properties: { directory: 'D:/tmp1/123', uuid }
-            })
+            if (this.oss.domain.length > 0) {
+              const uuid = uuidV1()
+              const transferFile = { uuid, ...file }
+              this.pushDownload(transferFile)
+              const fileUrl = url.format({
+                protocol: 'http:',
+                host: this.oss.domain[0],
+                pathname: encodeURI(file.key)
+              }).toString()
+              ipcRenderer.send('download', {
+                url: fileUrl,
+                properties: { directory: 'D:/download/', uuid }
+              })
+            }
           }
         }, {
           label: '删除'

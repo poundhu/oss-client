@@ -16,7 +16,11 @@ const actions = {
   setTActive: ({ commit }, active) => commit('SET_ACTIVE', active),
   pushDownload: ({ commit }, file) => commit('PUSH_DOWNLOAD', file),
   removeDownload: ({ commit }, file) => commit('REMOVE_DOWNLOAD', file),
-  clearDownloads: ({ commit }) => commit('CLEAR_DOWNLOADS')
+  clearDownloads: ({ commit }) => commit('CLEAR_DOWNLOADS'),
+  pushUpload: ({ commit }, file) => commit('PUSH_UPLOAD', file),
+  removeUpload: ({ commit }, file) => commit('REMOVE_UPLOAD', file),
+  clearUploads: ({ commit }) => commit('CLEAR_UPLOADS'),
+  clearDone: ({ commit }) => commit('CLEAR_DONE')
 }
 
 export default actions

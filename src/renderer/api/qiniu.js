@@ -1,4 +1,6 @@
 import qiniu from 'qiniu'
+import * as qiniuJs from 'qiniu-js'
+
 import http from '@/assets/script/http'
 
 export function getMac (ak, sk) {
@@ -24,4 +26,18 @@ export function getBucketDomain (bucket, mac) {
   const accessToken = qiniu.util.generateAccessToken(mac, url, null)
   const options = { headers: { Authorization: accessToken } }
   return http.get(url, options)
+}
+
+export function upload (bucket, file, key, mac, uuid, observer) {
+  const options = {
+    scope: bucket,
+    returnBody: '{"key":"$(key)","hash":"$(etag)","uuid":"$(x:uuid)"}'
+  }
+  const putPolicy = new qiniu.rs.PutPolicy(options)
+  const token = putPolicy.uploadToken(mac)
+  const putExtra = { params: { 'x:uuid': uuid } }
+  const config = { useCdnDomain: true, region: 'z0' }
+  const observable = qiniuJs.upload(file, key, token, putExtra, config)
+  return observable.subscribe(observer) // 上传开始
+  // subscription.unsubscribe() // 上传取消
 }

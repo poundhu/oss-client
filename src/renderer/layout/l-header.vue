@@ -9,7 +9,8 @@
                              v-for="(item, index) in pages"
                              :to="item.link"
                              :key="index">
-                    <el-badge :value="downloads.length" :hidden="index !== 1 || downloads.length === 0">
+                    <el-badge :value="downloads.length + uploads.length"
+                              :hidden="index !== 1 || downloads.length + uploads.length === 0">
                         <span>{{item.name}}</span>
                     </el-badge>
                 </router-link>
@@ -156,7 +157,7 @@
         remote.getCurrentWindow().unmaximize()
       },
       close () {
-        remote.getCurrentWindow().close()
+        remote.getCurrentWindow().hide()
       },
       // 添加表单
       dropdownCmd (cmd) {

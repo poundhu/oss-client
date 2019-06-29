@@ -12,7 +12,8 @@ const getters = {
   oss: state => state.app.oss,
   tActive: state => state.transfer.active,
   downloads: state => state.transfer.downloads,
-  uploads: state => state.transfer.uploads
+  uploads: state => state.transfer.uploads,
+  done: state => state.transfer.done
 }
 
 export default getters

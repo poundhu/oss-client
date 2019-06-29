@@ -1,4 +1,4 @@
-import { getBuckets, getBucketFiles, getMac, getBucketDomain } from '@/api/qiniu'
+import { getBuckets, getBucketFiles, getMac, getBucketDomain, upload } from '@/api/qiniu'
 
 class Qiniu {
   origin = 'qiniu'
@@ -16,6 +16,18 @@ class Qiniu {
   async bucketFiles (name) {
     this.domain = await getBucketDomain(name, this.mac)
     return getBucketFiles(name, this.mac)
+  }
+
+  upload (bucket, file, key, uuid) {
+    return new Promise((resolve, reject) => {
+      const observer = {
+        next: res => console.log('upload progress', res),
+        error: err => reject(err),
+        complete: res => resolve(res)
+      }
+      const subscription = upload(bucket, file, key, this.mac, uuid, observer)
+      console.log('oss', subscription)
+    })
   }
 }
 

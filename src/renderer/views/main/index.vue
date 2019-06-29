@@ -4,7 +4,7 @@
         <div class="body-main">
             <m-toolbar class="body-main-toolbar"></m-toolbar>
             <m-header class="body-main-header"></m-header>
-            <m-main class="body-main__wrapper"></m-main>
+            <m-main class="body-main__wrapper" id="drag"></m-main>
             <m-footer class="body-main-footer"></m-footer>
         </div>
     </div>
