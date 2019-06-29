@@ -1,4 +1,7 @@
-import { getBuckets, getBucketFiles, getMac, getBucketDomain, upload } from '@/api/qiniu'
+import {
+  getBuckets, getBucketFiles,
+  getMac, getBucketDomain, upload, remove
+} from '@/api/qiniu'
 
 class Qiniu {
   origin = 'qiniu'
@@ -28,6 +31,10 @@ class Qiniu {
       const subscription = upload(bucket, file, key, this.mac, uuid, observer)
       console.log('oss', subscription)
     })
+  }
+
+  remove (bucket, key) {
+    return remove(bucket, key, this.mac)
   }
 }
 

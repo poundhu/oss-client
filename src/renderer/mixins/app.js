@@ -1,5 +1,5 @@
-import { mapGetters, mapActions } from 'vuex'
-import { remote, clipboard, ipcRenderer } from 'electron'
+import { mapActions, mapGetters } from 'vuex'
+import { clipboard, ipcRenderer, remote } from 'electron'
 import url from 'url'
 import uuidV1 from 'uuid/v1'
 
@@ -95,11 +95,16 @@ export default {
         }, { type: 'separator' }, {
           label: '复制链接',
           click: () => {
-            clipboard.writeText(file.key)
+            const fileUrl = this.getFileLink(file)
+            clipboard.writeText(fileUrl)
             this.$message.success('复制成功')
           }
         }, {
-          label: '复制链接（markdown）'
+          label: '复制链接（markdown）',
+          click: () => {
+            const fileUrl = this.getFileLink(file)
+            clipboard.writeText(`![${file.key}](${fileUrl})`)
+          }
         }, { type: 'separator' }, {
           label: '下载',
           click: () => {
@@ -107,11 +112,7 @@ export default {
               const uuid = uuidV1()
               const transferFile = { uuid, ...file }
               this.pushDownload(transferFile)
-              const fileUrl = url.format({
-                protocol: 'http:',
-                host: this.oss.domain[0],
-                pathname: encodeURI(file.key)
-              }).toString()
+              const fileUrl = this.getFileLink(file)
               ipcRenderer.send('download', {
                 url: fileUrl,
                 properties: { directory: 'D:/download/', uuid }
@@ -119,9 +120,25 @@ export default {
             }
           }
         }, {
-          label: '删除'
+          label: '删除',
+          click: async () => {
+            try {
+              await this.setBucketLoading(true)
+              await this.oss.remove(this.curBucketName, file.key)
+              await this.initBucket(this.curBucketName)
+            } catch (e) {
+              this.$message.error(e.toString())
+            }
+          }
         }])
       menu.popup(remote.getCurrentWindow())
+    },
+    getFileLink (file) {
+      return url.format({
+        protocol: 'http:',
+        host: this.oss.domain[0],
+        pathname: encodeURI(file.key)
+      }).toString()
     },
     openFolderContextMenu (hash) {
       const menu = Menu

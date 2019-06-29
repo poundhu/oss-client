@@ -41,3 +41,14 @@ export function upload (bucket, file, key, mac, uuid, observer) {
   return observable.subscribe(observer) // 上传开始
   // subscription.unsubscribe() // 上传取消
 }
+
+export function remove (bucket, key, mac) {
+  const config = new qiniu.conf.Config()
+  const bucketManager = new qiniu.rs.BucketManager(mac, config)
+  return new Promise((resolve, reject) => {
+    bucketManager.delete(bucket, key, (err, respBody, respInfo) => {
+      if (err) reject(err)
+      else resolve({ respBody, respInfo })
+    })
+  })
+}

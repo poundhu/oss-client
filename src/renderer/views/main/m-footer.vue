@@ -4,7 +4,7 @@
             <span v-if="selected.length === 0">{{curBucketFiles.length}}项</span>
             <span v-else>已选择{{selected.length}}项</span>
         </div>
-        <div class="footer-right">by ziying</div>
+        <div class="footer-right">{{this.oss.domain && this.oss.domain[0]}}</div>
     </div>
 </template>
 
