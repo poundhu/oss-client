@@ -1,7 +1,7 @@
 <template>
     <div class="m-toolbar">
         <div class="toolbar-left">
-            <el-button icon="el-icon-upload2">上传</el-button>
+            <el-button icon="el-icon-upload2" @click="selectFiles">上传</el-button>
             <el-button icon="el-icon-download" :disabled="selected.length === 0">下载</el-button>
             <el-button icon="el-icon-delete" :disabled="selected.length === 0">删除</el-button>
             <el-button icon="el-icon-folder-add">新建文件夹</el-button>
@@ -22,11 +22,18 @@
 </template>
 
 <script>
+  import { remote } from 'electron'
   import appMixin from '@/mixins/app'
 
   export default {
     name: 'm-toolbar',
-    mixins: [appMixin]
+    mixins: [appMixin],
+    methods: {
+      selectFiles () {
+        const dialogOptions = { properties: ['openFile', 'openDirectory', 'multiSelections'] }
+        remote.dialog.showOpenDialog(dialogOptions)
+      }
+    }
   }
 </script>
 

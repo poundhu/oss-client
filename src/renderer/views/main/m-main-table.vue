@@ -46,8 +46,8 @@
     data () {
       return {
         multipleSelection: [],
-        modifyTimeFormatter: (row, column, cellValue) => moment(cellValue / 1e4).format('YYYY-MM-DD HH:mm:ss'),
-        fileSizeFormatter: (row, column, cellValue) => formatFileSize(cellValue),
+        modifyTimeFormatter: (row, column, cellValue) => row.isFolder ? '' : moment(cellValue / 1e4).format('YYYY-MM-DD HH:mm:ss'),
+        fileSizeFormatter: (row, column, cellValue) => row.isFolder ? '' : formatFileSize(cellValue),
         tableClassName: ({ row }) => this.selected.findIndex(i => i.hash === row.hash) >= 0 ? 'current-row' : ''
       }
     },
