@@ -76,6 +76,37 @@
                         </el-form-item>
                     </el-form>
                 </div>
+                <div v-else-if="index === 2">
+                    <el-divider content-position="left">{{item.title}}</el-divider>
+                    <el-form label-width="300px" label-position="left">
+                        <el-form-item label="支持https：">
+                            <el-switch active-color="#13ce66"></el-switch>
+                        </el-form-item>
+                        <el-form-item label="直接删除，不显示确认框：">
+                            <el-switch active-color="#13ce66"></el-switch>
+                        </el-form-item>
+                        <el-form-item label="直接上传，不显示确认框：">
+                            <el-switch active-color="#13ce66"></el-switch>
+                        </el-form-item>
+                        <el-form-item label="如果文件存在，是否直接上传：">
+                            <el-switch active-color="#13ce66"></el-switch>
+                        </el-form-item>
+                        <el-form-item label="复制到粘贴板格式：">
+                            <el-radio-group>
+                                <el-radio :label="3">备选项</el-radio>
+                                <el-radio :label="6">备选项</el-radio>
+                                <el-radio :label="9">备选项</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="主题：">
+                            <el-radio-group>
+                                <el-radio :label="3">备选项</el-radio>
+                                <el-radio :label="6">备选项</el-radio>
+                                <el-radio :label="9">备选项</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-form>
+                </div>
             </div>
         </div>
     </div>
@@ -93,6 +124,9 @@
           icon: 'el-icon-setting'
         }, {
           title: '托盘设置',
+          icon: 'el-icon-warning-outline'
+        }, {
+          title: '关于',
           icon: 'el-icon-warning-outline'
         }]
       }

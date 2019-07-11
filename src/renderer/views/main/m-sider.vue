@@ -13,7 +13,11 @@
         </div>
         <div class="sider-bottom">
             <div class="ad">
-                <img draggable="false" src="../../assets/images/ad.png" alt="扫码">
+                <el-image draggable="false" :src="src" alt="扫码">
+                    <div slot="error" class="image-slot">
+                        加载图片失败
+                    </div>
+                </el-image>
             </div>
             <div class="progress">
                 <el-progress :percentage="20" color="#06a8ff" :show-text="false"></el-progress>
@@ -28,7 +32,12 @@
 
   export default {
     name: 'm-sider',
-    mixins: [appMixin]
+    mixins: [appMixin],
+    data () {
+      return {
+        src: 'http://soft.super-system.top/c057993e8ab328266df481192f7a84d2.jpg'
+      }
+    }
   }
 </script>
 
@@ -87,6 +96,15 @@
         }
 
         .sider-bottom {
+            .ad {
+                height: 190px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #c0c4cc;
+                font-size: 15px;
+            }
+
             .progress {
                 margin: 10px;
             }

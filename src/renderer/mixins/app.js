@@ -1,10 +1,10 @@
-import { mapActions, mapGetters } from 'vuex'
-import { clipboard, ipcRenderer, remote } from 'electron'
+import {mapActions, mapGetters} from 'vuex'
+import {clipboard, ipcRenderer, remote} from 'electron'
 import url from 'url'
 import uuidV1 from 'uuid/v1'
 
 import Creator from '@/assets/script/oss'
-import { pathJoin } from '@/assets/script/utils'
+import {pathJoin} from '@/assets/script/utils'
 
 const Menu = remote.Menu
 
@@ -21,8 +21,8 @@ export default {
     },
     async initBucket (bucket) {
       await this.setBucketLoading(true)
-      const { items } = await this.oss.bucketFiles(bucket)
-      await this.setBucketFiles({ name: bucket, files: items })
+      const {items} = await this.oss.bucketFiles(bucket)
+      await this.setBucketFiles({name: bucket, files: items})
       await this.setCurBucket(bucket)
       await this.setBucketLoading(false)
       await this.changeDirectory('')
@@ -37,7 +37,7 @@ export default {
             dirFiles.push(file)
           } else {
             if (dirFiles.findIndex(i => i.key === pathArr[0]) < 0) {
-              dirFiles.push({ isFolder: true, key: pathArr[0] })
+              dirFiles.push({isFolder: true, key: pathArr[0]})
             }
           }
         } else {
@@ -48,7 +48,7 @@ export default {
               dirFiles.push(file)
             } else {
               if (dirFiles.findIndex(i => i.key === pathArr[0]) < 0) {
-                dirFiles.push({ isFolder: true, key: pathArr[0] })
+                dirFiles.push({isFolder: true, key: pathArr[0]})
               }
             }
           }
@@ -67,7 +67,7 @@ export default {
         this.initBuckets()
       }
     },
-    contextMenu ({ isFolder, hash }) {
+    contextMenu ({isFolder, hash}) {
       if (isFolder) {
         this.openFolderContextMenu(hash)
       } else {
@@ -92,7 +92,7 @@ export default {
           }
         }, {
           label: '全选'
-        }, { type: 'separator' }, {
+        }, {type: 'separator'}, {
           label: '复制链接',
           click: () => {
             const fileUrl = this.getFileLink(file)
@@ -105,17 +105,17 @@ export default {
             const fileUrl = this.getFileLink(file)
             clipboard.writeText(`![${file.key}](${fileUrl})`)
           }
-        }, { type: 'separator' }, {
+        }, {type: 'separator'}, {
           label: '下载',
           click: () => {
             if (this.oss.domain.length > 0) {
               const uuid = uuidV1()
-              const transferFile = { uuid, ...file }
+              const transferFile = {uuid, ...file}
               this.pushDownload(transferFile)
               const fileUrl = this.getFileLink(file)
               ipcRenderer.send('download', {
                 url: fileUrl,
-                properties: { directory: 'D:/download/', uuid }
+                properties: {directory: remote.app.getPath('downloads'), uuid}
               })
             }
           }

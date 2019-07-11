@@ -1,8 +1,12 @@
 'use strict'
 import path from 'path'
+import os from 'os'
 
-import { app, BrowserWindow, ipcMain, screen, Menu, Tray } from 'electron'
-import { download } from 'electron-dl'
+import {app, BrowserWindow, ipcMain, screen, Menu, MenuItem, Tray, nativeImage} from 'electron'
+import {download} from 'electron-dl'
+
+const platform = os.platform()
+console.log(platform)
 
 /**
  * Set `__static` path to static files in production
@@ -23,7 +27,7 @@ const mainWindowUrl = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-function createWindow () {
+function createMainWindow () {
   /**
    * Initial window options
    */
@@ -117,54 +121,54 @@ function createSuspensionWindow () {
 let tray = null
 
 function createTray () {
-  tray = new Tray(path.join(__static, 'cloud.png'))
-  const contextMenu = Menu
-    .buildFromTemplate([
-      {
-        label: '设置',
-        click: () => {
-          mainWindow.show()
-          mainWindow.webContents.send('to', '/s')
-        }
-      },
-      {
-        label: '显示悬浮窗',
-        type: 'checkbox',
-        checked: true,
-        click: (menuItem) => {
-          menuItem.checked ? suspensionWindow.show() : suspensionWindow.hide()
-        }
-      }, { type: 'separator' },
-      {
-        label: '退出应用',
-        click: () => {
-          app.quit()
-        }
-      }
-    ])
+  const trayImage = nativeImage.createFromPath(path.join(__static, 'cloud.png'))
+  tray = new Tray(trayImage)
+  const contextMenu = new Menu()
+  const setting = new MenuItem({
+    label: '设置',
+    click: () => {
+      mainWindow.show()
+      mainWindow.webContents.send('to', '/s')
+    }
+  })
+  contextMenu.append(setting)
+  const suspension = new MenuItem({
+    label: '显示悬浮窗',
+    type: 'checkbox',
+    checked: true,
+    click: (menuItem) => {
+      menuItem.checked ? suspensionWindow.show() : suspensionWindow.hide()
+    }
+  })
+  platform !== 'darwin' && contextMenu.append(suspension)
+  contextMenu.append(new MenuItem({type: 'separator'}))
+  const quit = new MenuItem({
+    label: '退出应用',
+    click: () => {
+      app.quit()
+    }
+  })
+  contextMenu.append(quit)
   tray.setToolTip('云存储客户端')
   tray.setContextMenu(contextMenu)
   tray.on('click', () => {
-    console.log(mainWindow.isVisible)
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
   })
 }
 
 app.on('ready', () => {
-  createWindow()
-  createSuspensionWindow()
+  createMainWindow()
   createTray()
+  platform !== 'darwin' && createSuspensionWindow()
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  platform !== 'darwin' && app.quit()
 })
 
 app.on('activate', () => {
   if (mainWindow === null) {
-    createWindow()
+    createMainWindow()
   }
 })
 
