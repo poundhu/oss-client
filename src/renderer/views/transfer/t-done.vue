@@ -1,7 +1,7 @@
 <template>
     <div class="t-done">
         <div class="done-header">
-            <div>共传输<span class="blue">{{done.length}}</span>个文件</div>
+            <div>共传输 <span class="blue">{{done.length}}</span> 个文件</div>
             <el-button @click="clearDone()">清除所有记录</el-button>
         </div>
         <virtual-list class="done-list" v-if="done.length > 0" :size="40" :remain="8">

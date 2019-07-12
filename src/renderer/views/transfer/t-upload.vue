@@ -1,7 +1,7 @@
 <template>
     <div class="t-upload">
         <div class="upload-header">
-            <div>共上传<span class="blue">{{uploads.length}}</span>个文件</div>
+            <div>共上传 <span class="blue">{{uploads.length}}</span> 个文件</div>
         </div>
         <virtual-list class="upload-list" v-if="uploads.length > 0" :size="40" :remain="8">
             <item v-for="(item, index) of uploads" :key="index" :item="item"></item>
