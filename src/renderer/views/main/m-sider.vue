@@ -12,13 +12,7 @@
             </div>
         </div>
         <div class="sider-bottom">
-            <div class="ad">
-                <el-image draggable="false" :src="src" alt="扫码">
-                    <div slot="error" class="image-slot">
-                        加载图片失败
-                    </div>
-                </el-image>
-            </div>
+            <el-image class="bottom-image" draggable="false" :src="src" alt="扫码" fit="cover"></el-image>
             <div class="progress">
                 <el-progress :percentage="20" color="#06a8ff" :show-text="false"></el-progress>
                 <div class="progress-text">447G/5140G</div>
@@ -35,7 +29,7 @@
     mixins: [appMixin],
     data () {
       return {
-        src: 'http://soft.super-system.top/c057993e8ab328266df481192f7a84d2.jpg'
+        src: 'http://soft.super-system.top/b4b3e47e7836bc06118f5f840baef85e.jpeg'
       }
     }
   }
@@ -96,13 +90,9 @@
         }
 
         .sider-bottom {
-            .ad {
+            .bottom-image {
+                width: 100%;
                 height: 190px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: #c0c4cc;
-                font-size: 15px;
             }
 
             .progress {

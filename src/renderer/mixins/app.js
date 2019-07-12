@@ -107,14 +107,7 @@ export default {
         }, { type: 'separator' }, {
           label: '下载',
           click: () => {
-            const fileUrl = this.getFileLink(file)
-            const uuid = uuidV1()
-            const transferFile = { uuid, ...file }
-            this.pushDownload(transferFile)
-            ipcRenderer.send('download', {
-              url: fileUrl,
-              properties: { directory: remote.app.getPath('downloads'), uuid }
-            })
+            this.downloadItem(file)
           }
         }, {
           label: '删除',
@@ -154,6 +147,22 @@ export default {
           label: '删除'
         }])
       menu.popup(remote.getCurrentWindow())
+    },
+    downloadItem (file) {
+      const fileUrl = this.getFileLink(file)
+      const uuid = uuidV1()
+      const transferFile = { uuid, ...file }
+      this.pushDownload(transferFile)
+      ipcRenderer.send('download', {
+        url: fileUrl,
+        properties: { directory: remote.app.getPath('downloads'), uuid }
+      })
+    },
+    async uploadItem (file) {
+      const uuid = uuidV1()
+      this.pushUpload({ uuid, putTime: file.lastModified, fsize: file.size, mimeType: file.type, key: file.name })
+      const done = await this.oss.upload(this.curBucketName, file, file.name, uuid)
+      this.removeUpload(done)
     }
   },
   computed: {
