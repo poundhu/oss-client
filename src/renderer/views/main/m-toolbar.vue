@@ -1,10 +1,20 @@
 <template>
     <div class="m-toolbar">
         <div class="toolbar-left">
-            <el-button icon="el-icon-upload2" @click="selectFiles">上传</el-button>
-            <el-button icon="el-icon-download" :disabled="selected.length === 0">下载</el-button>
-            <el-button icon="el-icon-delete" :disabled="selected.length === 0">删除</el-button>
-            <el-button icon="el-icon-folder-add">新建文件夹</el-button>
+            <input type="file" style="display: none;"
+                   ref="upload" @change="uploadItems" multiple>
+            <el-button icon="el-icon-upload2" @click="$refs.upload.click()">上传文件</el-button>
+            <el-button icon="el-icon-download"
+                       :disabled="selected.length === 0"
+                       @click="downloadItems"
+            >下载
+            </el-button>
+            <el-button icon="el-icon-delete"
+                       :disabled="selected.length === 0"
+                       @click="deleteItems"
+            >删除
+            </el-button>
+            <!--<el-button icon="el-icon-folder-add">新建文件夹</el-button>-->
             <el-button icon="el-icon-download">离线下载</el-button>
         </div>
         <div class="toolbar-right">
@@ -22,16 +32,26 @@
 </template>
 
 <script>
-  import { remote } from 'electron'
   import appMixin from '@/mixins/app'
 
   export default {
     name: 'm-toolbar',
     mixins: [appMixin],
     methods: {
-      selectFiles () {
-        const dialogOptions = { properties: ['openFile', 'openDirectory', 'multiSelections'] }
-        remote.dialog.showOpenDialog(dialogOptions)
+      uploadItems (event) {
+        const {files} = event.target
+        for (let file of files) {
+          this.uploadItem(file)
+        }
+      },
+      downloadItems () {
+        this.selected.forEach(item => this.downloadItem(item))
+        this.clearAllSelected()
+      },
+      async deleteItems () {
+        await this.setBucketLoading(true)
+        for (let item of this.selected) await this.deleteItem(item)
+        await this.initBucket(this.curBucketName)
       }
     }
   }
@@ -56,5 +76,11 @@
                 cursor: pointer;
             }
         }
+    }
+</style>
+
+<style>
+    .upload-demo {
+        display: inline-block;
     }
 </style>

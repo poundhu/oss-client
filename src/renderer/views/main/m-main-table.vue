@@ -5,8 +5,8 @@
                   tooltip-effect="dark"
                   height="100%"
                   v-loading="bucketLoading"
-                  @row-dblclick="dblClick"
-                  @row-click="click"
+                  @row-dblclick="dblClickItem"
+                  @row-click="clickItem"
                   @row-contextmenu="contextMenu"
                   @selection-change="tableSelectionChange"
                   :row-class-name="tableClassName"
@@ -63,10 +63,6 @@
         selected.forEach(i => this.addSelectedItem(i.hash))
         //   this.clearAllSelected()
         //   selection.forEach(i => this.addSelectedItem(i.hash))
-      },
-      click (row, column, event) {
-        this.clearAllSelected()
-        this.addSelectedItem(row.hash)
       }
     },
     mounted () {

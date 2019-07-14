@@ -5,7 +5,6 @@
                @click="prev"
                :class="[this.appPrev.length === 1 && 'disable' ]"
             ></i>
-            <!--            <i class="el-icon-arrow-right"></i>-->
             <i class="el-icon-refresh-right"
                @click="refresh"></i>
         </div>
