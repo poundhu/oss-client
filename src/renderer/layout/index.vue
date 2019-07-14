@@ -9,7 +9,6 @@
 
 <script>
   import { ipcRenderer } from 'electron'
-  import uuidV1 from 'uuid/v1'
 
   import LHeader from './l-header'
   import appMixin from '@/mixins/app'
@@ -31,16 +30,11 @@
         this.$router.push(path)
       })
 
-      console.log(this.$route)
-
       document.addEventListener('drop', async (event) => {
         if (this.curBucketName && this.$route.path === '/m') {
-          const files = event.dataTransfer.files
+          const { files } = event.dataTransfer
           for (const file of files) {
-            const uuid = uuidV1()
-            this.pushUpload({ uuid, putTime: file.lastModified, fsize: file.size, mimeType: file.type, key: file.name })
-            const done = await this.oss.upload(this.curBucketName, file, file.name, uuid)
-            this.removeUpload(done)
+            this.uploadItem(file)
           }
         }
       }, false)

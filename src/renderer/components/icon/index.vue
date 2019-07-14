@@ -1,6 +1,7 @@
 <template>
     <div class="the-icon">
-        <svg class="icon" aria-hidden="true">
+        <el-image class="icon" :src="src" v-if="showImg && isImage(postfix)" lazy fit="cover"></el-image>
+        <svg class="icon" aria-hidden="true" v-else>
             <use :xlink:href="iconStr"></use>
         </svg>
     </div>
@@ -12,6 +13,7 @@
   const postfixList = ['sql', 'sketch', 'psd', 'apk', 'xls',
     'ai', 'otf', 'mp3', 'jpg', 'doc', 'dmg', 'mov', 'iso', 'flv', 'exe', 'wav',
     'ppt', 'html', 'pdf', 'png', 'avi', 'css', 'zip', 'log', 'gif', 'php', 'js']
+  const postfixImage = ['jpg', 'png', 'jpeg']
 
   export default {
     name: 'index',
@@ -23,6 +25,15 @@
       isFolder: {
         type: Boolean,
         default: false
+      },
+      // 如果 showImage 为 true ， domain 必填
+      showImg: {
+        type: Boolean,
+        default: false
+      },
+      domain: {
+        type: String,
+        default: ''
       }
     },
     computed: {
@@ -43,6 +54,15 @@
         } else {
           return '#icon-documents'
         }
+      },
+      src () {
+        return `http://${this.domain}/${this.postfix}`
+      }
+    },
+    methods: {
+      isImage () {
+        const postfix = this.postfix.split('.').pop()
+        return postfixImage.indexOf(postfix) >= 0
       }
     }
   }
