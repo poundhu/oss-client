@@ -81,6 +81,8 @@ export default {
       }
     },
     openFileContextMenu (hash) {
+      this.clearAllSelected()
+      this.addSelectedItem(hash)
       const file = this.curBucketFiles.find(i => i.hash === hash)
       const menu = Menu
         .buildFromTemplate([{
