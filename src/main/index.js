@@ -6,7 +6,6 @@ import {app, BrowserWindow, ipcMain, screen, Menu, MenuItem, Tray, nativeImage} 
 import {download} from 'electron-dl'
 
 const platform = os.platform()
-console.log(platform)
 
 /**
  * Set `__static` path to static files in production
@@ -55,6 +54,31 @@ function createMainWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  if (platform === 'darwin') {
+    const template = [
+      {
+        label: 'Application',
+        submenu: [{
+          label: 'Quit',
+          accelerator: 'Command+Q',
+          click: () => {
+            app.quit()
+          }
+        }]
+      },
+      {
+        label: '编辑',
+        submenu: [
+          {label: '拷贝', accelerator: 'CmdOrCtrl+C', selector: 'copy:'},
+          {label: '粘贴', accelerator: 'CmdOrCtrl+V', selector: 'paste:'}
+        ]
+      }
+    ]
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+  } else {
+    Menu.setApplicationMenu(null)
+  }
 
   ipcMain.on('download', (event, info) => {
     info.properties.onProgress = progress => {
@@ -121,7 +145,7 @@ function createSuspensionWindow () {
 let tray = null
 
 function createTray () {
-  const trayImage = nativeImage.createFromPath(path.join(__static, 'cloud.png'))
+  const trayImage = nativeImage.createFromPath(path.join(__static, 'tray.png'))
   tray = new Tray(trayImage)
   const contextMenu = new Menu()
   const setting = new MenuItem({
