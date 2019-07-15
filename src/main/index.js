@@ -2,8 +2,8 @@
 import path from 'path'
 import os from 'os'
 
-import {app, BrowserWindow, ipcMain, screen, Menu, MenuItem, Tray, nativeImage} from 'electron'
-import {download} from 'electron-dl'
+import { app, BrowserWindow, ipcMain, screen, Menu, MenuItem, Tray, nativeImage } from 'electron'
+import { download } from 'electron-dl'
 
 const platform = os.platform()
 
@@ -24,7 +24,7 @@ if (process.env.NODE_ENV !== 'development') {
 let mainWindow
 const mainWindowUrl = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+  : `file://${__dirname}/index.html/#/m`
 
 function createMainWindow () {
   /**
@@ -59,19 +59,15 @@ function createMainWindow () {
     const template = [
       {
         label: 'Application',
-        submenu: [{
-          label: 'Quit',
-          accelerator: 'Command+Q',
-          click: () => {
-            app.quit()
-          }
-        }]
+        submenu: [
+          { label: 'Quit', accelerator: 'Command+Q', click: () => app.quit() }
+        ]
       },
       {
         label: '编辑',
         submenu: [
-          {label: '拷贝', accelerator: 'CmdOrCtrl+C', selector: 'copy:'},
-          {label: '粘贴', accelerator: 'CmdOrCtrl+V', selector: 'paste:'}
+          { label: '拷贝', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+          { label: '粘贴', accelerator: 'CmdOrCtrl+V', selector: 'paste:' }
         ]
       }
     ]
@@ -116,6 +112,8 @@ function createSuspensionWindow () {
     resizable: false,
     show: false,
     webPreferences: {
+      webSecurity: false,
+      nodeIntegration: true,
       devTools: process.env.NODE_ENV === 'development'
     },
     transparent: true,
@@ -134,7 +132,6 @@ function createSuspensionWindow () {
   suspensionWindow.on('close', () => {
     suspensionWindow = null
   })
-  suspensionWindow.webContents.openDevTools()
 }
 
 /*
@@ -165,7 +162,7 @@ function createTray () {
     }
   })
   platform !== 'darwin' && contextMenu.append(suspension)
-  contextMenu.append(new MenuItem({type: 'separator'}))
+  contextMenu.append(new MenuItem({ type: 'separator' }))
   const quit = new MenuItem({
     label: '退出应用',
     click: () => {
@@ -182,8 +179,8 @@ function createTray () {
 
 app.on('ready', () => {
   createMainWindow()
-  createTray()
   platform !== 'darwin' && createSuspensionWindow()
+  createTray()
 })
 
 app.on('window-all-closed', () => {
