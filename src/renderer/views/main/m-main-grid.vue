@@ -8,7 +8,8 @@
              @contextmenu="contextMenu(item)"
              :key="index" :data-hash="item.hash">
             <icon class="item-icon" :postfix="item.key"
-                  :showImg="oss && oss.domain.length" :domain="oss && oss.domain[0]"
+                  :showImg="oss && oss.domain && oss.domain.length > 0"
+                  :domain="oss && oss.domain && oss.domain[0]"
                   :isFolder="item.isFolder"></icon>
             <span>{{item.key.split('/').pop()}}</span>
         </div>

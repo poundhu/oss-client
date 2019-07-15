@@ -1,6 +1,8 @@
 <template>
     <div class="the-icon">
-        <el-image class="icon" :src="src" v-if="showImg && isImage(postfix)" lazy fit="cover"></el-image>
+        <el-image class="icon" :src="src"
+                  v-if="showImg && isImage(postfix)" fit="cover"
+        ></el-image>
         <svg class="icon" aria-hidden="true" v-else>
             <use :xlink:href="iconStr"></use>
         </svg>
