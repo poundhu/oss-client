@@ -1,10 +1,10 @@
-import { mapActions, mapGetters } from 'vuex'
-import { clipboard, ipcRenderer, remote } from 'electron'
+import {mapActions, mapGetters} from 'vuex'
+import {clipboard, ipcRenderer, remote} from 'electron'
 import url from 'url'
 import uuidV1 from 'uuid/v1'
 
 import Creator from '@/assets/script/oss'
-import { pathJoin } from '@/assets/script/utils'
+import {pathJoin} from '@/assets/script/utils'
 
 const Menu = remote.Menu
 
@@ -13,16 +13,17 @@ export default {
     ...mapActions(['setCurBucket', 'setBucketFiles',
       'setBuckets', 'setBucketLoading', 'setBucketTableView', 'setDirFiles', 'pushPrev',
       'popPrev', 'addSelectedItem', 'removeSelectedItem', 'selectAllItem',
-      'clearAllSelected', 'setOSS', 'addOSS', 'pushDownload']),
+      'clearAllSelected', 'setOSS', 'addOSS', 'pushDownload', 'pushUpload', 'removeUpload']),
     async initBuckets () {
       const buckets = await this.oss.buckets()
       await this.setBuckets(buckets)
       await this.initBucket(this.curBucketName || buckets[0])
     },
     async initBucket (bucket) {
+      await this.clearAllSelected()
       await this.setBucketLoading(true)
-      const { items } = await this.oss.bucketFiles(bucket)
-      await this.setBucketFiles({ name: bucket, files: items })
+      const {items} = await this.oss.bucketFiles(bucket)
+      await this.setBucketFiles({name: bucket, files: items})
       await this.setCurBucket(bucket)
       await this.setBucketLoading(false)
       await this.changeDirectory('')
@@ -37,7 +38,7 @@ export default {
             dirFiles.push(file)
           } else {
             if (dirFiles.findIndex(i => i.key === pathArr[0]) < 0) {
-              dirFiles.push({ isFolder: true, key: pathArr[0] })
+              dirFiles.push({isFolder: true, key: pathArr[0]})
             }
           }
         } else {
@@ -48,7 +49,7 @@ export default {
               dirFiles.push(file)
             } else {
               if (dirFiles.findIndex(i => i.key === pathArr[0]) < 0) {
-                dirFiles.push({ isFolder: true, key: pathArr[0] })
+                dirFiles.push({isFolder: true, key: pathArr[0]})
               }
             }
           }
@@ -67,32 +68,34 @@ export default {
         this.initBuckets()
       }
     },
-    contextMenu ({ isFolder, hash }) {
+    contextMenu ({isFolder, hash}) {
       if (isFolder) {
         this.openFolderContextMenu(hash)
       } else {
         this.openFileContextMenu(hash)
       }
     },
-    dblClick (item) {
+    dblClickItem (item) {
       if (item.isFolder) {
         const localPath = pathJoin([this.curPath, item.key])
         this.changeDirectory(localPath)
       }
     },
+    clickItem (row, column, event) {
+      this.clearAllSelected()
+      this.addSelectedItem(row.hash)
+    },
     openFileContextMenu (hash) {
+      this.clearAllSelected()
+      this.addSelectedItem(hash)
       const file = this.curBucketFiles.find(i => i.hash === hash)
       const menu = Menu
         .buildFromTemplate([{
-          label: '重命名'
-        }, {
-          label: '选择',
+          label: '全选',
           click: () => {
-            this.addSelectedItem(hash)
+            this.selectAllItem()
           }
-        }, {
-          label: '全选'
-        }, { type: 'separator' }, {
+        }, {type: 'separator'}, {
           label: '复制链接',
           click: () => {
             const fileUrl = this.getFileLink(file)
@@ -104,7 +107,7 @@ export default {
             const fileUrl = this.getFileLink(file)
             clipboard.writeText(`![${file.key}](${fileUrl})`)
           }
-        }, { type: 'separator' }, {
+        }, {type: 'separator'}, {
           label: '下载',
           click: () => {
             this.downloadItem(file)
@@ -112,13 +115,9 @@ export default {
         }, {
           label: '删除',
           click: async () => {
-            try {
-              await this.setBucketLoading(true)
-              await this.oss.remove(this.curBucketName, file.key)
-              await this.initBucket(this.curBucketName)
-            } catch (e) {
-              this.$message.error(e.toString())
-            }
+            await this.setBucketLoading(true)
+            await this.deleteItem(file)
+            await this.initBucket(this.curBucketName)
           }
         }])
       menu.popup(remote.getCurrentWindow())
@@ -131,7 +130,7 @@ export default {
           pathname: encodeURI(file.key)
         }).toString()
       } else {
-        this.$notify.error({ title: '自定义位置', message: '没有绑定域名', position: 'bottom-right', offset: 30 })
+        this.$notify.error({title: '自定义位置', message: '没有绑定域名', position: 'bottom-right', offset: 30})
         throw new Error('没有绑定域名')
       }
     },
@@ -151,18 +150,25 @@ export default {
     downloadItem (file) {
       const fileUrl = this.getFileLink(file)
       const uuid = uuidV1()
-      const transferFile = { uuid, ...file }
+      const transferFile = {uuid, ...file}
       this.pushDownload(transferFile)
       ipcRenderer.send('download', {
         url: fileUrl,
-        properties: { directory: remote.app.getPath('downloads'), uuid }
+        properties: {directory: remote.app.getPath('downloads'), uuid}
       })
     },
     async uploadItem (file) {
       const uuid = uuidV1()
-      this.pushUpload({ uuid, putTime: file.lastModified, fsize: file.size, mimeType: file.type, key: file.name })
+      this.pushUpload({uuid, putTime: file.lastModified, fsize: file.size, mimeType: file.type, key: file.name})
       const done = await this.oss.upload(this.curBucketName, file, file.name, uuid)
       this.removeUpload(done)
+    },
+    async deleteItem (file) {
+      try {
+        await this.oss.remove(this.curBucketName, file.key)
+      } catch (e) {
+        this.$message.error(e.toString())
+      }
     }
   },
   computed: {

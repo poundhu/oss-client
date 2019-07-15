@@ -1,11 +1,12 @@
 <template>
     <div class="m-main-table">
-        <el-table ref="multipleTable"
+        <el-table ref="table"
                   :data="dirFiles"
                   tooltip-effect="dark"
                   height="100%"
                   v-loading="bucketLoading"
-                  @row-dblclick="dblClick"
+                  @row-dblclick="dblClickItem"
+                  @row-click="clickItem"
                   @row-contextmenu="contextMenu"
                   @selection-change="tableSelectionChange"
                   :row-class-name="tableClassName"
@@ -37,29 +38,36 @@
   import moment from 'moment'
 
   import appMixin from '@/mixins/app'
-  import { formatFileSize } from '@/assets/script/utils'
+  import {formatFileSize} from '@/assets/script/utils'
   import Icon from '@/components/icon'
 
   export default {
-    components: { Icon },
+    components: {Icon},
     mixins: [appMixin],
+    watch: {
+      selected (selected) {
+        this.$refs.table.clearSelection()
+        selected.forEach(item => this.$refs.table.toggleRowSelection(item, true))
+      }
+    },
     data () {
       return {
         multipleSelection: [],
         modifyTimeFormatter: (row, column, cellValue) => row.isFolder ? '' : moment(cellValue / 1e4).format('YYYY-MM-DD HH:mm:ss'),
         fileSizeFormatter: (row, column, cellValue) => row.isFolder ? '' : formatFileSize(cellValue),
-        tableClassName: ({ row }) => this.selected.findIndex(i => i.hash === row.hash) >= 0 ? 'current-row' : ''
+        tableClassName: ({row}) => this.selected.findIndex(i => i.hash === row.hash) >= 0 ? 'current-row' : ''
       }
     },
     methods: {
-      tableSelectionChange (selection) {
-        this.clearAllSelected()
-        selection.forEach(i => this.addSelectedItem(i.hash))
+      tableSelectionChange (selected) {
+        selected.forEach(i => this.addSelectedItem(i.hash))
+        //   this.clearAllSelected()
+        //   selection.forEach(i => this.addSelectedItem(i.hash))
       }
     },
     mounted () {
       this.clearAllSelected()
-      this.$refs['multipleTable'].clearSelection()
+      this.$refs['table'].clearSelection()
     }
   }
 </script>

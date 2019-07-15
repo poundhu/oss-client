@@ -4,7 +4,8 @@
              v-for="(item, index) in dirFiles"
              :title="item.key.split('/').pop()"
              :class="[ selected.findIndex(i=>i.hash === item.hash) >= 0 ? 'selected' : '' ]"
-             @dblclick="dblClick(item)"
+             @dblclick="dblClickItem(item)"
+             @click="clickItem(item)"
              @contextmenu="contextMenu(item)"
              :key="index" :data-hash="item.hash">
             <icon class="item-icon" :postfix="item.key"
@@ -25,11 +26,11 @@
 
   export default {
     name: 'm-main',
-    components: { MMainTable, Icon },
+    components: {MMainTable, Icon},
     mixins: [appMixin],
     methods: {
       // 选区
-      onSelect ({ target, originalEvent, selectedElements }) {
+      onSelect ({target, originalEvent, selectedElements}) {
         const selected = target.classList.contains('selected')
         if (!originalEvent.ctrlKey && !originalEvent.metaKey) {
           for (const el of selectedElements) {
@@ -43,7 +44,7 @@
           this.removeSelectedItem(target.dataset.hash)
         }
       },
-      onStart ({ selectedElements, originalEvent }) {
+      onStart ({selectedElements, originalEvent}) {
         if (!originalEvent.ctrlKey && !originalEvent.metaKey) {
           for (const el of selectedElements) {
             this.removeSelectedItem(el.dataset.hash)
@@ -51,7 +52,7 @@
           this.clearAllSelected()
         }
       },
-      onMove ({ selectedElements, changedElements: { removed } }) {
+      onMove ({selectedElements, changedElements: {removed}}) {
         for (const el of selectedElements) {
           this.addSelectedItem(el.dataset.hash)
         }
