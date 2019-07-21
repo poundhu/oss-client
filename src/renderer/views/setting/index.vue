@@ -76,59 +76,54 @@
                         </el-form-item>
                     </el-form>
                 </div>
+                <div v-else-if="index === 3">
+                    <el-divider content-position="left">{{item.title}}</el-divider>
+                    <el-form label-width="300px" label-position="left">
+                        <el-form-item :label="item.title" v-for="(item, index) in versions"
+                                      :key="index">
+                            <span>{{item.version}}</span>
+                        </el-form-item>
+                    </el-form>
+                </div>
                 <div v-else-if="index === 2">
                     <el-divider content-position="left">{{item.title}}</el-divider>
                     <el-form label-width="300px" label-position="left">
-                        <el-form-item label="支持https：">
-                            <el-switch active-color="#13ce66"></el-switch>
-                        </el-form-item>
-                        <el-form-item label="直接删除，不显示确认框：">
-                            <el-switch active-color="#13ce66"></el-switch>
-                        </el-form-item>
-                        <el-form-item label="直接上传，不显示确认框：">
-                            <el-switch active-color="#13ce66"></el-switch>
-                        </el-form-item>
-                        <el-form-item label="如果文件存在，是否直接上传：">
-                            <el-switch active-color="#13ce66"></el-switch>
-                        </el-form-item>
-                        <el-form-item label="复制到粘贴板格式：">
-                            <el-radio-group>
-                                <el-radio :label="3">备选项</el-radio>
-                                <el-radio :label="6">备选项</el-radio>
-                                <el-radio :label="9">备选项</el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                        <el-form-item label="主题：">
-                            <el-radio-group>
-                                <el-radio :label="3">备选项</el-radio>
-                                <el-radio :label="6">备选项</el-radio>
-                                <el-radio :label="9">备选项</el-radio>
-                            </el-radio-group>
+                        <el-form-item :label="item.title" v-for="(item, index) in links"
+                                      :key="index">
+                            <span style="cursor: pointer;" @click="open(item.link)">{{item.link}}</span>
                         </el-form-item>
                     </el-form>
                 </div>
             </div>
+            <div style="height:200px;"></div>
         </div>
     </div>
 </template>
 
 <script>
+  import { remote } from 'electron'
+
   export default {
     name: 'index',
     data () {
       return {
         active: 0,
-        behavior: false,
-        settings: [{
-          title: '全局设置',
-          icon: 'el-icon-setting'
-        }, {
-          title: '托盘设置',
-          icon: 'el-icon-warning-outline'
-        }, {
-          title: '关于',
-          icon: 'el-icon-warning-outline'
-        }]
+        versions: [
+          { title: '操作系统', version: require('os').platform() },
+          { title: 'electron 版本', version: process.versions.electron },
+          { title: 'node 版本', version: process.versions.node },
+          { title: 'vue 版本', version: require('vue/package.json').version },
+          { title: 'app 版本', version: remote.app.getVersion() }
+        ],
+        settings: [
+          { title: '全局设置', icon: 'el-icon-setting' },
+          { title: '托盘设置', icon: 'el-icon-warning-outline' },
+          { title: '链接', icon: 'el-icon-warning-outline' },
+          { title: '关于', icon: 'el-icon-warning-outline' }
+        ],
+        links: [
+          { title: '项目地址', link: 'https://github.com/caorushizi/oss-client' }
+        ]
       }
     },
     methods: {
@@ -142,8 +137,11 @@
         const anchors = container.querySelectorAll('.settings')
         this.active = Array.from(anchors).findIndex(i => i.offsetTop - 76 - 24 > evt.target['scrollTop']) - 1
         if (container.scrollTop + container.clientHeight === container.scrollHeight) {
-          this.active += 1
+          this.active = this.settings.length - 1
         }
+      },
+      open (link) {
+        remote.shell.openExternal(link)
       }
     },
     mounted () {

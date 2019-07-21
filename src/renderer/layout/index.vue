@@ -20,9 +20,10 @@
     mixins: [appMixin, transferMixin],
     mounted () {
       this.clearDownloads()
+      this.clearUploads()
       this.initOSS(this.oss)
 
-      ipcRenderer.on('download complete', (event, {downloadId}) => {
+      ipcRenderer.on('download complete', (event, { downloadId }) => {
         this.removeDownload(downloadId)
       })
 
