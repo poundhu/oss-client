@@ -8,7 +8,7 @@
                 <el-progress
                         :text-inside="true"
                         :stroke-width="15"
-                        :percentage="status.find(i=>i.uuid === item.uuid) | percentageFilter"
+                        :percentage="status.find(i=>i.downloadId === item.downloadId) | percentageFilter"
                         style="width: 250px;"
                 ></el-progress>
             </item>
@@ -41,7 +41,7 @@
     },
     mounted () {
       ipcRenderer.on('download progress', (event, status) => {
-        const index = this.status.findIndex(i => i.uuid === status.uuid)
+        const index = this.status.findIndex(i => i.downloadId === status.downloadId)
         if (index < 0) {
           this.status.push(status)
         } else {

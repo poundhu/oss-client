@@ -14,7 +14,7 @@
                        @click="deleteItems"
             >删除
             </el-button>
-            <!--<el-button icon="el-icon-folder-add">新建文件夹</el-button>-->
+            <el-button icon="el-icon-folder-add" @click="mkdirDialogVisible = true">新建文件夹</el-button>
             <el-button icon="el-icon-download">离线下载</el-button>
         </div>
         <div class="toolbar-right">
@@ -28,6 +28,23 @@
                @click="setBucketTableView(!bucketTableView)"
             >&#xe7f4;</i>
         </div>
+
+        <el-dialog title="新建文件夹" :visible.sync="mkdirDialogVisible">
+            <el-form :model="mkdirForm" status-icon
+                     :rules="mkdirFormRules" ref="mkdirForm" label-width="100px"
+            >
+                <el-form-item label="文件夹名称" prop="dirName">
+                    <el-input v-model="mkdirForm.dirName"
+                              autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="mkdirDialogVisible = false">取 消</el-button>
+                <el-button type="primary" :loading="mkdirFormConfirmLoading"
+                           @click="mkdirConfirm">确定
+                </el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -37,9 +54,40 @@
   export default {
     name: 'm-toolbar',
     mixins: [appMixin],
+    data () {
+      return {
+        mkdirDialogVisible: false,
+        mkdirFormConfirmLoading: false,
+        mkdirForm: { dirName: '新建文件夹' },
+        mkdirFormRules: {
+          dirName: [
+            { required: true, message: '文件夹名称不能为空', trigger: 'blur' },
+            { min: 3, max: 25, message: '文件夹名称长度应该在3到25个字符', trigger: 'blur' }]
+        }
+      }
+    },
     methods: {
+      mkdirConfirm () {
+        this.$refs.mkdirForm
+          .validate(async (valid) => {
+            if (!valid) return false
+
+            try {
+              this.mkdirFormConfirmLoading = true
+              const name = `${this.mkdirForm.dirName}/.o_c`
+              await this.uploadItem({ name })
+              this.$message.success('创建文件夹成功')
+            } catch (e) {
+              this.$message.error(e.message)
+            } finally {
+              this.mkdirDialogVisible = false
+              this.$refs.mkdirForm.resetFields()
+              this.mkdirFormConfirmLoading = false
+            }
+          })
+      },
       uploadItems (event) {
-        const {files} = event.target
+        const { files } = event.target
         for (let file of files) {
           this.uploadItem(file)
         }

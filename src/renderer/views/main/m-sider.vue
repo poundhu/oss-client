@@ -4,7 +4,7 @@
             <div
                     class="item"
                     :class="[curBucketName === item ? 'active' : '']"
-                    @click="initBucket(item)"
+                    @click="changeBucket(item)"
                     v-for="(item, index) in buckets"
                     :key="index">
                 <i class="el-icon-folder-opened"></i>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+  import path from 'path'
   import appMixin from '@/mixins/app'
 
   export default {
@@ -30,6 +31,15 @@
     data () {
       return {
         src: 'http://soft.super-system.top/b4b3e47e7836bc06118f5f840baef85e.jpeg'
+      }
+    },
+    methods: {
+      async changeBucket (bucketName) {
+        const curPath = '/'
+        await this.clearPrev()
+        await this.initBucket(bucketName)
+        await this.changeDirectory(curPath)
+        await this.pushPrev({ path: curPath, name: path.basename(curPath) })
       }
     }
   }

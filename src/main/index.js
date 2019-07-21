@@ -80,14 +80,14 @@ function createMainWindow () {
     info.properties.onProgress = progress => {
       mainWindow.webContents.send('download progress', {
         progress: parseInt((progress * 100).toFixed(2)),
-        uuid: info.properties.uuid
+        downloadId: info.properties.downloadId
       })
     }
     download(mainWindow, info.url, info.properties)
       .then(dl => {
         mainWindow.webContents.send('download complete', {
           savePath: dl.getSavePath(),
-          uuid: info.properties.uuid
+          downloadId: info.properties.downloadId
         })
       })
   })
@@ -145,6 +145,11 @@ function createTray () {
   const trayImage = nativeImage.createFromPath(path.join(__static, 'tray.png'))
   tray = new Tray(trayImage)
   const contextMenu = new Menu()
+  const showMainWindow = new MenuItem({
+    label: '显示主界面',
+    click: () => mainWindow.show()
+  })
+  contextMenu.append(showMainWindow)
   const setting = new MenuItem({
     label: '设置',
     click: () => {

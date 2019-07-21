@@ -2,17 +2,18 @@
     <el-row class="m-main-grid" v-loading="bucketLoading">
         <div class="grid-item"
              v-for="(item, index) in dirFiles"
-             :title="item.key.split('/').pop()"
-             :class="[ selected.findIndex(i=>i.hash === item.hash) >= 0 ? 'selected' : '' ]"
+             :title="item.name"
+             :class="[ selected.findIndex(i=>i.uuid === item.uuid) >= 0 ? 'selected' : '' ]"
              @dblclick="dblClickItem(item)"
              @click="clickItem(item)"
              @contextmenu="contextMenu(item)"
-             :key="index" :data-hash="item.hash">
-            <icon class="item-icon" :postfix="item.key"
+             :key="index" :data-hash="item.uuid">
+            <icon class="item-icon" :postfix="item.type"
+                  :meta="item.meta"
                   :showImg="oss && oss.domain && oss.domain.length > 0"
                   :domain="oss && oss.domain && oss.domain[0]"
                   :isFolder="item.isFolder"></icon>
-            <span>{{item.key.split('/').pop()}}</span>
+            <span>{{item.name}}</span>
         </div>
     </el-row>
 </template>

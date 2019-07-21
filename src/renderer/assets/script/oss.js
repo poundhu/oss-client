@@ -9,32 +9,35 @@ class Qiniu {
   constructor (ak, sk) {
     this.ak = ak
     this.sk = sk
-    this.mac = getMac(ak, sk)
   }
 
   buckets () {
-    return getBuckets(this.mac)
+    const mac = getMac(this.ak, this.sk)
+    return getBuckets(mac)
   }
 
   async bucketFiles (name) {
-    this.domain = await getBucketDomain(name, this.mac)
-    return getBucketFiles(name, this.mac)
+    const mac = getMac(this.ak, this.sk)
+    this.domain = await getBucketDomain(name, mac)
+    return getBucketFiles(name, mac)
   }
 
   upload (bucket, file, key, uuid) {
+    const mac = getMac(this.ak, this.sk)
     return new Promise((resolve, reject) => {
       const observer = {
         next: res => console.log('upload progress', res),
         error: err => reject(err),
         complete: res => resolve(res)
       }
-      const subscription = upload(bucket, file, key, this.mac, uuid, observer)
+      const subscription = upload(bucket, file, key, mac, uuid, observer)
       console.log('oss', subscription)
     })
   }
 
   remove (bucket, key) {
-    return remove(bucket, key, this.mac)
+    const mac = getMac(this.ak, this.sk)
+    return remove(bucket, key, mac)
   }
 }
 

@@ -1,23 +1,3 @@
-/*
-
-file: {
-  hash:'',
-  key:'',
-  isFolder:''
-}
-
- */
-
-// export const file = {
-//   fsize: '',
-//   hash: '',
-//   key: '',
-//   mimeType: '',
-//   putTime: '',
-//   status: 0,
-//   type: 0
-// }
-
 const app = {
   state: {
     buckets: [],
@@ -34,8 +14,6 @@ const app = {
   },
   mutations: {
     'SET_CURRENT_BUCKET' (state, bucket) {
-      state.curPath = ''
-      state.prev = []
       state.curBucketName = bucket
       state.curBucketFiles = state.buckets[state.curBucketName]
     },
@@ -55,18 +33,21 @@ const app = {
       state.dirFiles = files
     },
     'PUSH_PREV' (state, path) {
-      state.curPath = path
+      state.curPath = path.path
       state.prev.push(path)
     },
     'POP_PREV' (state) {
       if (state.prev.length > 1) {
         state.prev.pop()
-        state.curPath = state.prev[state.prev.length - 1]
+        state.curPath = state.prev[state.prev.length - 1].path
       }
     },
+    'CLEAR_PREV' (state) {
+      state.prev = []
+    },
     'ADD_SELECTED_ITEM' (state, hash) {
-      const index = state.curBucketFiles.findIndex(item => item.hash === hash)
-      const currentIndex = state.selected.findIndex(item => item.hash === hash)
+      const index = state.curBucketFiles.findIndex(item => item.uuid === hash)
+      const currentIndex = state.selected.findIndex(item => item.uuid === hash)
       if (currentIndex < 0 && index >= 0) {
         state.selected.push(state.curBucketFiles[index])
       }

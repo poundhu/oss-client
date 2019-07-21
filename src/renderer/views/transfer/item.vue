@@ -1,13 +1,13 @@
 <template>
     <div class="list-item">
         <div class="item-file-meta">
-            <icon class="item-file-icon" :postfix="item.key"></icon>
+            <icon class="item-file-icon" :postfix="item.type"></icon>
             <div class="item-file-detail">
-                <div class="file-name">{{item.key}}</div>
-                <div class="file-size">{{item.fsize | sizeFormatter}}</div>
+                <div class="file-name">{{item.name}}</div>
+                <div class="file-size">{{item.size | sizeFormatter}}</div>
             </div>
         </div>
-        <div class="item-file-time">{{item.putTime | timeFormatter}}</div>
+        <div class="item-file-time">{{item.uploadTime | timeFormatter}}</div>
         <div class="item-file-status">
             <slot></slot>
         </div>

@@ -11,11 +11,3 @@ export function formatFileSize (size) {
     return (size) + ' B'
   }
 }
-
-export function pathJoin (arr) {
-  if (!arr[0]) {
-    return arr.join('/').substring(1)
-  } else {
-    return arr.join('/')
-  }
-}

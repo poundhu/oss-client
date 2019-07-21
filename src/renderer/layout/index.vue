@@ -22,8 +22,8 @@
       this.clearDownloads()
       this.initOSS(this.oss)
 
-      ipcRenderer.on('download complete', (event, file) => {
-        this.removeDownload(file)
+      ipcRenderer.on('download complete', (event, {downloadId}) => {
+        this.removeDownload(downloadId)
       })
 
       ipcRenderer.on('to', (event, path) => {

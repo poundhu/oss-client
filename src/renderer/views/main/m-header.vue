@@ -11,10 +11,10 @@
         <el-divider direction="vertical"></el-divider>
         <div class="header-center">
             <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item>首页</el-breadcrumb-item>
-                <el-breadcrumb-item v-for="(item, index) in this.curPath.split('/')"
+                <el-breadcrumb-item v-for="(item, index) in appPrev"
                                     :key="index"
-                >{{item}}
+                >
+                    <span class="path-link" @click="changeDirectory(item.path, false)">{{item.name || '首页'}}</span>
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -39,11 +39,14 @@
     },
     methods: {
       async prev () {
-        await this.popPrev()
-        this.changeDirectory(this.curPath, false)
+        if (this.appPrev.length > 1) {
+          await this.popPrev()
+          this.changeDirectory(this.curPath, false)
+        }
       },
-      refresh () {
-        this.initBucket(this.curBucketName)
+      async refresh () {
+        await this.initBucket(this.curBucketName)
+        await this.changeDirectory(this.curPath)
       }
     }
   }
@@ -74,6 +77,10 @@
         .header-center {
             flex: 1;
             cursor: default;
+
+            .path-link {
+                cursor: pointer;
+            }
         }
 
         .header-right {

@@ -12,8 +12,8 @@ const transfer = {
     'PUSH_DOWNLOAD' (state, file) {
       state.downloads.push(file)
     },
-    'REMOVE_DOWNLOAD' (state, file) {
-      const index = state.downloads.findIndex(i => i.uuid === file.uuid)
+    'REMOVE_DOWNLOAD' (state, downloadId) {
+      const index = state.downloads.findIndex(i => i.downloadId === downloadId)
       if (index >= 0) {
         const done = state.downloads.splice(index, 1)
         state.done.push(...done)
@@ -25,8 +25,8 @@ const transfer = {
     'PUSH_UPLOAD' (state, file) {
       state.uploads.push(file)
     },
-    'REMOVE_UPLOAD' (state, file) {
-      const index = state.uploads.findIndex(i => i.uuid === file.uuid)
+    'REMOVE_UPLOAD' (state, uploadId) {
+      const index = state.uploads.findIndex(i => i.uploadId === uploadId)
       if (index >= 0) {
         const done = state.uploads.splice(index, 1)
         state.done.push(...done)

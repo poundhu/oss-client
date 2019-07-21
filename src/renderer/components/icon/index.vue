@@ -36,29 +36,34 @@
       domain: {
         type: String,
         default: ''
+      },
+      meta: {
+        type: Object,
+        default: () => ({})
       }
     },
     computed: {
       iconStr () {
-        const postfix = this.postfix.split('.').pop()
         if (this.isFolder) {
           return '#icon-wenjian'
-        } else if (postfixList.indexOf(postfix) > 0) {
-          return `#icon-${postfix}`
-        } else if (postfix === 'xlsx') {
+        } else if (postfixList.indexOf(this.postfix) > 0) {
+          return `#icon-${this.postfix}`
+        } else if (this.postfix === 'xlsx') {
           return '#icon-xls'
-        } else if (postfix === 'pptx') {
+        } else if (this.postfix === 'pptx') {
           return '#icon-ppt'
-        } else if (postfix === 'docx') {
+        } else if (this.postfix === 'docx') {
           return '#icon-doc'
-        } else if (postfix === 'mp4') {
+        } else if (this.postfix === 'mp4') {
           return '#icon-movie'
+        } else if (this.postfix === 'jpeg') {
+          return '#icon-jpg'
         } else {
           return '#icon-documents'
         }
       },
       src () {
-        return `http://${this.domain}/${this.postfix}`
+        return `http://${this.domain}/${this.meta.key}`
       }
     },
     methods: {

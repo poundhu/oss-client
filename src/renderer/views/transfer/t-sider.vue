@@ -22,16 +22,9 @@
     data () {
       return {
         actions: [
-          {
-            title: '正在下载',
-            icon: 'el-icon-download'
-          }, {
-            title: '正在上传',
-            icon: 'el-icon-upload2'
-          }, {
-            title: '传输完成',
-            icon: 'el-icon-check'
-          }
+          { title: '正在下载', icon: 'el-icon-download' },
+          { title: '正在上传', icon: 'el-icon-upload2' },
+          { title: '传输完成', icon: 'el-icon-check' }
         ]
       }
     }

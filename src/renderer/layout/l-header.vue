@@ -97,50 +97,23 @@
       return {
         maximizeStatus: false,
         pages: [
-          {
-            link: '/m',
-            name: '首页'
-          }, {
-            link: '/t',
-            name: '传输列表'
-          }, {
-            link: '/s',
-            name: '设置'
-          }
+          { link: '/m', name: '首页' },
+          { link: '/t', name: '传输列表' },
+          { link: '/s', name: '设置' }
         ],
         addFormDialogVisible: false,
-        addForm: {
-          ak: '',
-          sk: '',
-          origin: ''
-        },
+        addForm: { ak: '', sk: '', origin: '' },
         addFormRules: {
           origin: [{ required: true, message: '请选择云存储类型', trigger: 'blur' }],
           ak: [{ required: true, message: '请输入 AccessKey', trigger: 'blur' }],
           sk: [{ required: true, message: '请输入 SecretKey', trigger: 'blur' }]
         },
         originOptions: [
-          {
-            label: '七牛云',
-            value: 'qiniu',
-            icon: '#icon-qiniuyun1'
-          }, {
-            label: '腾讯云',
-            value: 'tencent',
-            icon: '#icon-tengxunyun'
-          }, {
-            label: '阿里云',
-            value: 'aliyun',
-            icon: '#icon-aliyun-logo'
-          }, {
-            label: '青云',
-            value: 'qing',
-            icon: '#icon-qingyun'
-          }, {
-            label: '又拍云',
-            value: 'upai',
-            icon: '#icon-upyun'
-          }
+          { label: '七牛云', value: 'qiniu', icon: '#icon-qiniuyun1' },
+          { label: '腾讯云', value: 'tencent', icon: '#icon-tengxunyun' },
+          { label: '阿里云', value: 'aliyun', icon: '#icon-aliyun-logo' },
+          { label: '青云', value: 'qing', icon: '#icon-qingyun' },
+          { label: '又拍云', value: 'upai', icon: '#icon-upyun' }
         ]
       }
     },

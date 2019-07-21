@@ -7,6 +7,7 @@ const actions = {
   setDirFiles: ({ commit }, files) => commit('SET_DIR_FILES', files),
   pushPrev: ({ commit }, path) => commit('PUSH_PREV', path),
   popPrev: ({ commit }) => commit('POP_PREV'),
+  clearPrev: ({ commit }) => commit('CLEAR_PREV'),
   addSelectedItem: ({ commit }, file) => commit('ADD_SELECTED_ITEM', file),
   removeSelectedItem: ({ commit }, file) => commit('REMOVE_SELECTED_ITEM', file),
   selectAllItem: ({ commit }) => commit('SELECT_ALL_ITEM'),

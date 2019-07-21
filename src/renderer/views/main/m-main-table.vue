@@ -17,10 +17,10 @@
                 <template slot-scope="scope">
                     <div class="file-title">
                         <icon class="file-icon"
-                              :postfix="scope.row.key"
+                              :postfix="scope.row.type"
                               :isFolder="scope.row.isFolder"
                         ></icon>
-                        <span>{{scope.row.key.split('/').pop()}}</span>
+                        <span>{{scope.row.name}}</span>
                     </div>
                 </template>
             </el-table-column>
@@ -35,14 +35,12 @@
 </template>
 
 <script>
-  import moment from 'moment'
-
   import appMixin from '@/mixins/app'
-  import {formatFileSize} from '@/assets/script/utils'
+  import { formatFileSize } from '@/assets/script/utils'
   import Icon from '@/components/icon'
 
   export default {
-    components: {Icon},
+    components: { Icon },
     mixins: [appMixin],
     watch: {
       selected (selected) {
@@ -53,16 +51,14 @@
     data () {
       return {
         multipleSelection: [],
-        modifyTimeFormatter: (row, column, cellValue) => row.isFolder ? '' : moment(cellValue / 1e4).format('YYYY-MM-DD HH:mm:ss'),
-        fileSizeFormatter: (row, column, cellValue) => row.isFolder ? '' : formatFileSize(cellValue),
-        tableClassName: ({row}) => this.selected.findIndex(i => i.hash === row.hash) >= 0 ? 'current-row' : ''
+        modifyTimeFormatter: row => row.isFolder ? '' : row.uploadTime,
+        fileSizeFormatter: row => row.isFolder ? '' : formatFileSize(row.size),
+        tableClassName: ({ row }) => this.selected.findIndex(i => i.uuid === row.uuid) >= 0 ? 'current-row' : ''
       }
     },
     methods: {
       tableSelectionChange (selected) {
-        selected.forEach(i => this.addSelectedItem(i.hash))
-        //   this.clearAllSelected()
-        //   selection.forEach(i => this.addSelectedItem(i.hash))
+        selected.forEach(i => this.addSelectedItem(i.uuid))
       }
     },
     mounted () {
