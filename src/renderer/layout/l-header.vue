@@ -1,7 +1,7 @@
 <template>
     <div class="m-header">
         <div class="header-logo">
-            <img src="../assets/images/qiniu.png" alt="七牛云存储">
+            <span>LOGO</span>
         </div>
         <div class="header--wrapper">
             <div class="header-action">
@@ -171,9 +171,12 @@
             width: 165px;
             text-align: center;
 
-            img {
+            span {
                 width: 130px;
                 display: inline-block;
+                font-size: 30px;
+                color: #06a8ff;
+                cursor: default;
             }
         }
 
