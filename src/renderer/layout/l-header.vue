@@ -40,8 +40,8 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <el-divider direction="vertical"></el-divider>
-                <div class="button-base">
+                <el-divider direction="vertical" v-if="!isMac"></el-divider>
+                <div class="button-base" v-show="!isMac">
                     <i class="iconfont" @click="minimize">&#xe7fd;</i>
                     <i class="iconfont" @click="maximize" v-if="!maximizeStatus">&#xe60f;</i>
                     <i class="iconfont" @click="unmaximize" v-else>&#xe601;</i>
@@ -85,6 +85,7 @@
 </template>
 
 <script>
+  import os from 'os'
   import { remote } from 'electron'
 
   import appMixin from '@/mixins/app'
@@ -95,6 +96,7 @@
     mixins: [appMixin, transferMixin],
     data () {
       return {
+        isMac: os.platform() === 'darwin',
         maximizeStatus: false,
         pages: [
           { link: '/m', name: '首页' },

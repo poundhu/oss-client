@@ -6,6 +6,7 @@ import { app, BrowserWindow, ipcMain, screen, Menu, MenuItem, Tray, nativeImage 
 import { download } from 'electron-dl'
 
 const platform = os.platform()
+const MACOS = 'darwin'
 
 /**
  * Set `__static` path to static files in production
@@ -36,7 +37,7 @@ function createMainWindow () {
     width: 1100,
     minWidth: 1100,
     useContentSize: true,
-    frame: false,
+    frame: platform === MACOS,
     show: false,
     webPreferences: {
       webSecurity: false,
@@ -55,7 +56,7 @@ function createMainWindow () {
     mainWindow = null
   })
 
-  if (platform === 'darwin') {
+  if (platform === MACOS) {
     const template = [
       {
         label: 'Application',
@@ -166,7 +167,7 @@ function createTray () {
       menuItem.checked ? suspensionWindow.show() : suspensionWindow.hide()
     }
   })
-  platform !== 'darwin' && contextMenu.append(suspension)
+  platform !== MACOS && contextMenu.append(suspension)
   contextMenu.append(new MenuItem({ type: 'separator' }))
   const quit = new MenuItem({
     label: '退出应用',
@@ -184,12 +185,12 @@ function createTray () {
 
 app.on('ready', () => {
   createMainWindow()
-  platform !== 'darwin' && createSuspensionWindow()
+  platform !== MACOS && createSuspensionWindow()
   createTray()
 })
 
 app.on('window-all-closed', () => {
-  platform !== 'darwin' && app.quit()
+  platform !== MACOS && app.quit()
 })
 
 app.on('activate', () => {
