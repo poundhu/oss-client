@@ -183,8 +183,7 @@ export default {
         type: mime.getExtension(file.type)
       }
       this.pushUpload(item)
-      const remotePath = `${path.join(this.curPath, file.name)}`
-      console.log(remotePath)
+      const remotePath = `${path.join(this.curPath, file.name)}`.replace(/\\/, '/')
       await this.oss.upload(this.curBucketName, file, remotePath, uploadId)
       this.removeUpload(uploadId)
     },
