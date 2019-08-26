@@ -25,6 +25,8 @@
   import path from 'path'
   import appMixin from '@/mixins/app'
 
+  const separator = process.platform === 'darwin' ? '/' : '\\'
+
   export default {
     name: 'm-sider',
     mixins: [appMixin],
@@ -35,7 +37,7 @@
     },
     methods: {
       async changeBucket (bucketName) {
-        const curPath = '/'
+        const curPath = separator
         await this.clearPrev()
         await this.initBucket(bucketName)
         await this.changeDirectory(curPath)
