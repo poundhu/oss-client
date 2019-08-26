@@ -2,7 +2,7 @@
   "name": "oss-client",
   "version": "0.0.1",
   "author": "caorushizi <84996057@qq.com>",
-  "description": "An electron-vue project",
+  "description": "仿百度网盘，七牛云存储客户端",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -22,8 +22,8 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "oss-client",
-    "appId": "com.example.yourapp",
+    "productName": "云存储客户端",
+    "appId": "me.caorushizi.oss",
     "directories": {
       "output": "build"
     },
