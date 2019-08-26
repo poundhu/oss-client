@@ -184,6 +184,7 @@ export default {
       }
       this.pushUpload(item)
       const remotePath = `${path.join(this.curPath, file.name)}`
+      console.log(remotePath)
       await this.oss.upload(this.curBucketName, file, remotePath, uploadId)
       this.removeUpload(uploadId)
     },
