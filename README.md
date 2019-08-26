@@ -15,6 +15,6 @@
     
 ### 下载链接(v0.0.1)
 
-[win](http://example.com/ "win")
+[win](http://soft.super-system.top//云存储客户端%20Setup%200.0.1.exe)
 
-[mac](http://wxample.com "mac") 
+[mac](http://soft.super-system.top//云存储客户端-0.0.1.dmg) 
