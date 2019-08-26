@@ -9,6 +9,7 @@ import mime from 'mime'
 import Creator from '@/assets/script/oss'
 
 const Menu = remote.Menu
+const separator = process.platform === 'darwin' ? '/' : '\\'
 
 /**
  * File
@@ -39,7 +40,7 @@ export default {
       await this.clearPrev()
       await this.setBuckets(buckets)
       await this.initBucket(this.curBucketName || buckets[0])
-      const curPath = '/'
+      const curPath = separator
       await this.changeDirectory(curPath)
       this.pushPrev({ path: curPath, name: path.basename(curPath) })
     },
@@ -65,12 +66,12 @@ export default {
       for (let file of this.curBucketFiles) {
         if (file.remotePath.indexOf(curPath) === 0) {
           let key = file.remotePath.slice(curPath.length, file.remotePath.length)
-          const pathArr = key.split('/')
+          const pathArr = key.split(separator)
           if (pathArr.length === 1) {
             dirFiles.push(file)
           } else {
-            if (dirFiles.findIndex(i => i.path === `${pathArr[0]}/`) < 0) {
-              dirFiles.push({ isFolder: true, path: `${pathArr[0]}/`, name: pathArr[0] })
+            if (dirFiles.findIndex(i => i.path === `${pathArr[0]}${separator}`) < 0) {
+              dirFiles.push({ isFolder: true, path: `${pathArr[0]}${separator}`, name: pathArr[0] })
             }
           }
         }

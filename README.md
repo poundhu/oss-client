@@ -13,4 +13,8 @@
 - 设置
     ![Image text](./image/设置.png)
     
+### 下载链接(v0.0.1)
 
+[win](http://example.com/ "win")
+
+[mac](http://wxample.com "mac") 
