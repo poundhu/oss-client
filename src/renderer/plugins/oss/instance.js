@@ -11,12 +11,12 @@ class Qiniu {
     this.sk = sk
   }
 
-  buckets () {
+  getBucketNames () {
     const mac = getMac(this.ak, this.sk)
     return getBuckets(mac)
   }
 
-  async bucketFiles (name) {
+  async getBucketFiles (name) {
     const mac = getMac(this.ak, this.sk)
     this.domain = await getBucketDomain(name, mac)
     return getBucketFiles(name, mac)
@@ -41,11 +41,30 @@ class Qiniu {
   }
 }
 
-export default class Creator {
-  static create ({ origin, ak, sk }) {
+export default class Instance {
+  instance
+
+  getBucketNames () {
+    return this.instance.getBucketNames()
+  }
+
+  getBucketFiles (name) {
+    return this.instance.getBucketFiles(name)
+  }
+
+  upload (bucket, file, key, uuid) {
+    return this.instance.upload(bucket, file, key, uuid)
+  }
+
+  remove (bucket, key) {
+    return this.instance.remove(bucket, key)
+  }
+
+  setOss ({ origin, ak, sk }) {
     switch (origin) {
       case 'qiniu':
-        return new Qiniu(ak, sk)
+        this.instance = new Qiniu(ak, sk)
+        break
       case 'ali':
         break
       default:

@@ -21,7 +21,12 @@ const actions = {
   pushUpload: ({ commit }, file) => commit('PUSH_UPLOAD', file),
   removeUpload: ({ commit }, file) => commit('REMOVE_UPLOAD', file),
   clearUploads: ({ commit }) => commit('CLEAR_UPLOADS'),
-  clearDone: ({ commit }) => commit('CLEAR_DONE')
+  clearDone: ({ commit }) => commit('CLEAR_DONE'),
+  // new
+  setCurrentOssAk: ({ commit }, ossAk) => commit('SET_CURRENT_OSS_AK', ossAk),
+  setCurrentBucketName: ({ commit }, bucketName) => commit('SET_CURRENT_BUCKET_NAME', bucketName),
+  setCurrentBucket: ({ commit }, bucket) => commit('SET_CURRENT_BUCKET', bucket),
+  setCurrentOssBucketNames: ({ commit }, bucketNames) => commit('SET_CURRENT_OSS_BUCKET_NAMES', bucketNames)
 }
 
 export default actions

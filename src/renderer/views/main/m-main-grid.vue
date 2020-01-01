@@ -1,18 +1,18 @@
 <template>
     <el-row class="m-main-grid" v-loading="bucketLoading">
         <div class="grid-item"
-             v-for="(item, index) in dirFiles"
+             v-for="(item, index) in currentBucket.children"
              :title="item.name"
              :class="[ selected.findIndex(i=>i.uuid === item.uuid) >= 0 ? 'selected' : '' ]"
              @dblclick="dblClickItem(item)"
              @click="clickItem(item)"
              @contextmenu="contextMenu(item)"
              :key="index" :data-hash="item.uuid">
-            <icon class="item-icon" :postfix="item.type"
+            <icon class="item-icon" :postfix="item.ext"
                   :meta="item.meta"
                   :showImg="oss && oss.domain && oss.domain.length > 0"
                   :domain="oss && oss.domain && oss.domain[0]"
-                  :isFolder="item.isFolder"></icon>
+                  :isFolder="item.isFolder"/>
             <span>{{item.name}}</span>
         </div>
     </el-row>

@@ -10,6 +10,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/style/index.scss'
 import './assets/style/iconfont/iconfont'
 
+import OSS from '@/plugins/oss'
+
+Vue.use(OSS)
 Vue.use(ElementUI, { size: 'mini' })
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))

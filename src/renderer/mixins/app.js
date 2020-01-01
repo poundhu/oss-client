@@ -3,10 +3,11 @@ import path from 'path'
 import { mapActions, mapGetters } from 'vuex'
 import { clipboard, ipcRenderer, remote } from 'electron'
 import uuidV1 from 'uuid/v1'
-import moment from 'moment'
+// import moment from 'moment'
 import mime from 'mime'
 
-import Creator from '@/assets/script/oss'
+import Vdir from '../plugins/oss/vdir'
+import localforage from 'localforage'
 
 const Menu = remote.Menu
 const separator = process.platform === 'darwin' ? '/' : '\\'
@@ -33,34 +34,39 @@ export default {
       'setBuckets', 'setBucketLoading', 'setBucketTableView', 'setDirFiles', 'pushPrev',
       'popPrev', 'addSelectedItem', 'removeSelectedItem', 'selectAllItem',
       'clearAllSelected', 'setOSS', 'addOSS', 'pushDownload', 'pushUpload', 'removeUpload',
-      'clearPrev']),
-    async initBuckets () {
-      // 初始化所有的 bucket
-      const buckets = await this.oss.buckets()
-      await this.clearPrev()
-      await this.setBuckets(buckets)
-      await this.initBucket(this.curBucketName || buckets[0])
-      const curPath = separator
-      await this.changeDirectory(curPath)
-      this.pushPrev({ path: curPath, name: path.basename(curPath) })
-    },
-    async initBucket (bucket) {
-      await this.clearAllSelected()
-      await this.setBucketLoading(true)
-      const { items } = await this.oss.bucketFiles(bucket)
-      const files = items.map(i => ({
-        name: i.key.split('/').pop(),
-        size: i.fsize,
-        type: i.key.split('.').pop(),
-        uuid: i.hash,
-        uploadTime: moment(i.putTime / 1e4).format('YYYY-MM-DD HH:mm:ss'),
-        remotePath: path.normalize(`${i.key.indexOf('/') === 0 ? '' : '/'}${i.key}`),
-        meta: i
-      }))
-      await this.setBucketFiles({ name: bucket, files })
-      await this.setCurBucket(bucket)
-      await this.setBucketLoading(false)
-    },
+      'clearPrev',
+      // new
+      'setCurrentOssAk', 'setCurrentBucketName', 'setCurrentBucket', 'setCurrentOssBucketNames'
+    ]),
+    // async initBuckets () {
+    //   // 初始化所有的 bucket
+    //   const buckets = await this.oss.buckets()
+    //   await this.clearPrev()
+    //   await this.setBuckets(buckets)
+    //   await this.initBucket(this.curBucketName || buckets[0])
+    //   const curPath = separator
+    //   await this.changeDirectory(curPath)
+    //   this.pushPrev({ path: curPath, name: path.basename(curPath) })
+    // },
+    // async initBucket (bucketName) {
+    //   await this.clearAllSelected()
+    //   await this.setBucketLoading(true)
+    //   const { items } = await this.oss.bucketFiles(bucketName)
+    //
+    //   const files = items.map(i => ({
+    //     name: i.key.split('/').pop(),
+    //     size: i.fsize,
+    //     type: i.key.split('.').pop(),
+    //     uuid: i.hash,
+    //     uploadTime: moment(i.putTime / 1e4).format('YYYY-MM-DD HH:mm:ss'),
+    //     remotePath: path.normalize(`${i.key.indexOf('/') === 0 ? '' : '/'}${i.key}`),
+    //     meta: i
+    //   }))
+    //
+    //   await this.setBucketFiles({ name: bucketName, files })
+    //   await this.setCurBucket(bucketName)
+    //   await this.setBucketLoading(false)
+    // },
     changeDirectory (curPath) {
       let dirFiles = []
       for (let file of this.curBucketFiles) {
@@ -78,13 +84,53 @@ export default {
       }
       this.setDirFiles(dirFiles)
     },
-    async initOSS (oss) {
-      if (oss) {
-        this.addOSS(oss)
-        const ossObject = Creator.create(oss)
-        this.setOSS(ossObject)
-        this.initBuckets()
-      }
+    initOssBucketNames (ossConfig) {
+      // 使用『ak，sk』换取 bucket 列表
+      this.$objectStorageService.setOss(ossConfig)
+      // 获取 bucket 列表
+      return this.$objectStorageService.getBucketNames()
+        // 设置 bucket 列表， 并返回
+        .then(bucketNames => {
+          this.setCurrentOssBucketNames(bucketNames)
+          return bucketNames
+        })
+    },
+    initBucket (bucketName) {
+      // 开始 loading
+      return this.setBucketLoading(true)
+        // 设置当前 bucket 名称
+        .then(() => this.setCurrentBucketName(bucketName))
+        // 开始向服务器请求，获取 bucket 文件列表
+        .then(() => this.$objectStorageService.getBucketFiles(bucketName))
+        .then(({ items }) => {
+          const bucket = new Vdir('')
+          items.forEach(item => bucket.addItem(item.key, item.fsize, item.hash, item.putTime / 1e4, item))
+          // 设置 bucket
+          return this.setCurrentBucket(bucket)
+        })
+        // 结束 loading
+        .then(() => this.setBucketLoading(false))
+    },
+    initGlobalState () {
+      localforage.getItem('ossConfigList')
+        .then(val => {
+          // 获取所有「对象云存储」的 config，并且选中！！
+          if (!(val instanceof Array)) val = []
+          const activeOssConfig = val.find(item => item.ak === this.currentOssAk) || val[0] || null
+          this.setCurrentOssAk(activeOssConfig.ak)
+          if (!activeOssConfig) throw new Error('没有 oss 配置')
+          return activeOssConfig
+        })
+        .then(activeOssConfig => this.initOssBucketNames(activeOssConfig))
+        .then(bucketNameList => {
+          // 切换到指定的 bucket,获取 bucket 数据
+          const activeBucketName = this.currentBucketName || bucketNameList[0] || null
+          return this.initBucket(activeBucketName)
+        })
+        .catch(e => {
+          console.error(e)
+          this.$message(e.message)
+        })
     },
     contextMenu ({ isFolder, uuid }) {
       if (isFolder) {
@@ -198,6 +244,9 @@ export default {
   computed: {
     ...mapGetters(['curBucketName', 'curBucketFiles',
       'bucketLoading', 'buckets', 'bucketTableView', 'dirFiles', 'curPath',
-      'appPrev', 'selected', 'ossArr', 'oss'])
+      'appPrev', 'selected', 'ossArr', 'oss',
+      // new
+      'currentBucketName', 'currentOssAk', 'currentBucket', 'currentOssBucketNames'
+    ])
   }
 }

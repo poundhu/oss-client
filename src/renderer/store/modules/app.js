@@ -13,10 +13,10 @@ const app = {
     oss: null
   },
   mutations: {
-    'SET_CURRENT_BUCKET' (state, bucket) {
-      state.curBucketName = bucket
-      state.curBucketFiles = state.buckets[state.curBucketName]
-    },
+    // 'SET_CURRENT_BUCKET' (state, bucket) {
+    //   state.curBucketName = bucket
+    //   state.curBucketFiles = state.buckets[state.curBucketName]
+    // },
     'SET_BUCKET_FILES' (state, { name, files }) {
       state.buckets[name] = files
     },

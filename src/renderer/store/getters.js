@@ -13,7 +13,11 @@ const getters = {
   tActive: state => state.transfer.active,
   downloads: state => state.transfer.downloads,
   uploads: state => state.transfer.uploads,
-  done: state => state.transfer.done
+  done: state => state.transfer.done,
+  currentOssAk: state => state.global.currentOssAk,
+  currentBucketName: state => state.global.currentBucketName,
+  currentBucket: state => state.global.currentBucket,
+  currentOssBucketNames: state => state.global.currentOssBucketNames
 }
 
 export default getters
