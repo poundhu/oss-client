@@ -169,14 +169,17 @@
       addFormCancel () {
         this.$refs['addForm'].resetFields()
         this.addFormDialogVisible = false
+      },
+      initBucketList () {
+        // 初始化「云存储配置」列表
+        localforage.getItem('ossConfigList').then(val => {
+          if (!(val instanceof Array)) val = []
+          this.ossConfigList = val
+        })
       }
     },
     mounted () {
-      // 初始化「云存储配置」列表
-      localforage.getItem('ossConfigList').then(val => {
-        if (!(val instanceof Array)) val = []
-        this.ossConfigList = val
-      })
+
     }
   }
 </script>
